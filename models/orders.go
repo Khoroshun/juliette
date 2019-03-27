@@ -23,7 +23,7 @@ returns message and true if the requirement is met
 func (Order *Order) Validate() (map[string] interface{}, bool) {
 
 	if Order.Client  <= 0  {
-		return u.Message(false, "Client name should be on the payload"), false
+		return u.Message(false, "Client should be on the payload"), false
 	}
 
 	//if Order.Summ  <= 0  {
@@ -45,6 +45,8 @@ func (Order *Order) Create() (map[string] interface{}) {
 	}
 
 	GetDB().Create(Order)
+
+
 
 	resp := u.Message(true, "success")
 	resp["Order"] = Order

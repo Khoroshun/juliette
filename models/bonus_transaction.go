@@ -1,15 +1,15 @@
 package models
 
 import (
-	u "github.com/khoroshun/juliette/utils"
-	"github.com/jinzhu/gorm"
 	"fmt"
+	"github.com/jinzhu/gorm"
+	u "github.com/khoroshun/juliette/utils"
 )
 
 type BonusTransaction struct {
 	gorm.Model
 	Account uint `json:"Account"`
-	Summ string `json:"summ"`
+	Summ uint `json:"summ"`
 	Reason string `json:"reason"`
 	Date string `json:"date"`
 	Source string `json:"source"`
@@ -45,10 +45,14 @@ func (bonusTransaction *BonusTransaction) Create() (map[string] interface{}) {
 
 	GetDB().Create(bonusTransaction)
 
+	bonusAccount := GetBonusAccount(bonusTransaction.Account)
+	GetDB().Model(bonusAccount).Update("Summ",bonusAccount.Summ + bonusTransaction.Summ)
+
 	resp := u.Message(true, "success")
 	resp["bonusTransaction"] = bonusTransaction
 	return resp
 }
+
 
 func GetBonusTransaction(id uint) (*BonusTransaction) {
 

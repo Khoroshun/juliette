@@ -9,7 +9,7 @@ import (
 type BonusAccount struct {
 	gorm.Model
 	Client uint `json:"client"`
-	Summ string `json:"summ"`
+	Summ uint `json:"summ"`
 	Status string `json:"status"`
 }
 
@@ -21,10 +21,6 @@ func (bonusAccount *BonusAccount) Validate() (map[string] interface{}, bool) {
 
 	if bonusAccount.Client  <= 0  {
 		return u.Message(false, "BonusAccount name should be on the payload"), false
-	}
-
-	if bonusAccount.Summ == "" {
-		return u.Message(false, "Phone number should be on the payload"), false
 	}
 
 	if bonusAccount.Status == ""  {
@@ -51,7 +47,7 @@ func (bonusAccount *BonusAccount) Create() (map[string] interface{}) {
 func GetBonusAccount(id uint) (*BonusAccount) {
 
 	bonusAccount := &BonusAccount{}
-	err := GetDB().Table("bonusAccounts").Where("id = ?", id).First(bonusAccount).Error
+	err := GetDB().Table("bonus_accounts").Where("id = ?", id).First(bonusAccount).Error
 	if err != nil {
 		return nil
 	}
@@ -68,4 +64,14 @@ func GetBonusAccounts(user uint) ([]*BonusAccount) {
 	}
 
 	return bonusAccounts
+}
+
+func GetBonusAccountByClientID(clientID uint) (*BonusAccount) {
+
+	bonusAccount := &BonusAccount{}
+	err := GetDB().Table("bonus_accounts").Where("client = ?", clientID).First(bonusAccount).Error
+	if err != nil {
+		return nil
+	}
+	return bonusAccount
 }

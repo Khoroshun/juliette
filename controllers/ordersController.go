@@ -17,9 +17,8 @@ var CreateOrder = func(w http.ResponseWriter, r *http.Request) {
 
 	//source := r.Context().Value("user") . (uint) //Grab the id of the user that send the request
 
-	order  := &models.Order{}
-	client := &models.Client{}
-	res := response{}
+	order  				:= &models.Order{}
+	res 				:= response{}
 
 	err := json.NewDecoder(r.Body).Decode(&res)
 	if err != nil {
@@ -27,18 +26,16 @@ var CreateOrder = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client = models.GetClientByPhone(res.Phone)
-	if client == nil {
-		client := &models.Client{}
-		client.Name = "anonim"
-		client.Phone = res.Phone
-		client.Create()
-		client = models.GetClientByPhone(res.Phone)
-	}
+	client := CreateClient(res);
+
+	bonusAccount	:= CreateBonusAccount(client.ID);
+	CreateBonusTransaction(bonusAccount.ID,res)
 
 	order.Client = client.ID
 	order.OrderNum = res.OrderNum
 	order.Bonus = res.Bonus
+
+	//fmt.Println(source)
 	//order.Source = source
 
 	resp := order.Create()

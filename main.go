@@ -14,14 +14,14 @@ func main() {
 
 	router.HandleFunc("/api/user/new", controllers.CreateAccount).Methods("POST")
 	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
-	router.HandleFunc("/api/contacts/new", controllers.CreateContact).Methods("POST")
-	router.HandleFunc("/api/user/{id:[0-9]+}/contacts", controllers.GetContactsFor).Methods("GET") //  user/2/contacts
+	//router.HandleFunc("/api/contacts/new", controllers.CreateContact).Methods("POST")
+	//router.HandleFunc("/api/user/{id:[0-9]+}/contacts", controllers.GetContactsFor).Methods("GET") //  user/2/contacts
 
 	router.HandleFunc("/api/order/new", controllers.CreateOrder).Methods("POST")
 
 
 	router.HandleFunc("/api/bonusaccount/get", controllers.GetBonusAccount).Methods("GET")
-	router.HandleFunc("/api/bonustransaction/new", controllers.CreateBonusTransaction).Methods("POST")
+	//router.HandleFunc("/api/bonustransaction/new", controllers.CreateBonusTransaction).Methods("POST")
 	router.HandleFunc("/api/bonustransaction/get", controllers.GetBonusTransaction).Methods("GET")
 
 
