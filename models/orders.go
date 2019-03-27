@@ -46,8 +46,6 @@ func (Order *Order) Create() (map[string] interface{}) {
 
 	GetDB().Create(Order)
 
-
-
 	resp := u.Message(true, "success")
 	resp["Order"] = Order
 	return resp

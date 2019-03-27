@@ -8,7 +8,7 @@ import (
 
 type BonusTransaction struct {
 	gorm.Model
-	Account uint `json:"Account"`
+	Account uint `json:"account"`
 	Summ uint `json:"summ"`
 	Reason string `json:"reason"`
 	Date string `json:"date"`
@@ -64,10 +64,10 @@ func GetBonusTransaction(id uint) (*BonusTransaction) {
 	return bonusTransaction
 }
 
-func GetBonusTransactions(user uint) ([]*BonusTransaction) {
+func GetBonusTransactions(account uint) ([]*BonusTransaction) {
 
 	bonusTransactions := make([]*BonusTransaction, 0)
-	err := GetDB().Table("bonusTransactions").Where("user_id = ?", user).Find(&bonusTransactions).Error
+	err := GetDB().Table("bonus_transactions").Where("account = ?", account).Find(&bonusTransactions).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil

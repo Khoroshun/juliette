@@ -19,14 +19,13 @@ func main() {
 
 	router.HandleFunc("/api/order/new", controllers.CreateOrder).Methods("POST")
 
-
+	router.HandleFunc("/api/bonustransaction/new", controllers.CreateBonusTransaction).Methods("POST")
 	router.HandleFunc("/api/bonusaccount/get", controllers.GetBonusAccount).Methods("GET")
-	//router.HandleFunc("/api/bonustransaction/new", controllers.CreateBonusTransaction).Methods("POST")
-	router.HandleFunc("/api/bonustransaction/get", controllers.GetBonusTransaction).Methods("GET")
+	router.HandleFunc("/api/bonustransaction/get", controllers.GetBonusTransactions).Methods("GET")
 
 
-	router.HandleFunc("/api/discountaccount/get", controllers.GetDiscountAccount).Methods("GET")
 	router.HandleFunc("/api/discountchanges/new", controllers.CreateDiscountChanges).Methods("POST")
+	router.HandleFunc("/api/discountaccount/get", controllers.GetDiscountAccount).Methods("GET")
 	router.HandleFunc("/api/discountchanges/get", controllers.GetDiscountChanges).Methods("GET")
 
 	//router.Use(app.JwtAuthentication) //attach JWT auth middleware

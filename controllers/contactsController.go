@@ -5,7 +5,7 @@ import (
 )
 
 
-func CreateClient (res response)  (*models.Client){
+func CreateClient (res request)  (*models.Client){
 
 	client := models.GetClientByPhone(res.Phone)
 	if client == nil { // if new client

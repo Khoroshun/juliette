@@ -8,11 +8,9 @@ import (
 
 type DiscountAccount struct {
 	gorm.Model
-	Account uint `json:"Account"`
-	Summ string `json:"summ"`
-	Reason string `json:"reason"`
-	Date string `json:"date"`
-	Source string `json:"source"`
+	Client uint `json:"client"`
+	Percent uint `json:"percent"`
+	Status string `json:"status"`
 }
 
 /*
@@ -50,5 +48,15 @@ func GetDiscountAccount(user uint) ([]*DiscountAccount) {
 		return nil
 	}
 
+	return discountAccount
+}
+
+func GetDiscountAccountByClientID(clientID uint) (*DiscountAccount) {
+
+	discountAccount := &DiscountAccount{}
+	err := GetDB().Table("discount_accounts").Where("client = ?", clientID).First(discountAccount).Error
+	if err != nil {
+		return nil
+	}
 	return discountAccount
 }

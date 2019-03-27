@@ -9,7 +9,7 @@ import (
 type DiscountChanges struct {
 	gorm.Model
 	Account uint `json:"Account"`
-	Percent string `json:"percent"`
+	Percent uint `json:"percent"`
 	Reason string `json:"reason"`
 	Date string `json:"date"`
 }
