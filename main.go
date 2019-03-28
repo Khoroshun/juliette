@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/khoroshun/juliette/app"
 	"github.com/khoroshun/juliette/controllers"
 	"net/http"
 	"os"
@@ -28,7 +29,7 @@ func main() {
 	router.HandleFunc("/api/discountaccount/get", controllers.GetDiscountAccount).Methods("GET")
 	router.HandleFunc("/api/discountchanges/get", controllers.GetDiscountChanges).Methods("GET")
 
-	//router.Use(app.JwtAuthentication) //attach JWT auth middleware
+	router.Use(app.JwtAuthentication) //attach JWT auth middleware
 
 	port := os.Getenv("PORT") //Get port from .env file, we did not specify any port so this should return an empty string when tested locally
 	if port == "" {

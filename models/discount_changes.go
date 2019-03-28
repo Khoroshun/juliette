@@ -8,7 +8,7 @@ import (
 
 type DiscountChanges struct {
 	gorm.Model
-	Account uint `json:"Account"`
+	Account uint `json:"account"`
 	Percent uint `json:"percent"`
 	Reason string `json:"reason"`
 	Date string `json:"date"`
@@ -40,10 +40,10 @@ func (discountChanges *DiscountChanges) Create() (map[string] interface{}) {
 }
 
 
-func GetDiscountChanges(user uint) ([]*DiscountChanges) {
+func GetDiscountChanges(account uint) ([]*DiscountChanges) {
 
 	discountChanges := make([]*DiscountChanges, 0)
-	err := GetDB().Table("discountChanges").Where("user_id = ?", user).Find(&discountChanges).Error
+	err := GetDB().Table("discount_changes").Where("account = ?", account).Find(&discountChanges).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil

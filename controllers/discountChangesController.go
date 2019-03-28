@@ -14,6 +14,10 @@ type CreateDiscountChangesRequest struct {
 	Reason string `json:"reason"`
 }
 
+type GetDiscountChangesRequest struct {
+	Phone string `json:"phone"`
+}
+
 var CreateDiscountChanges = func(w http.ResponseWriter, r *http.Request) {
 
 	discountChanges := &models.DiscountChanges{}
@@ -43,16 +47,20 @@ var CreateDiscountChanges = func(w http.ResponseWriter, r *http.Request) {
 
 var GetDiscountChanges = func(w http.ResponseWriter, r *http.Request) {
 
-	//user := r.Context().Value("user") . (uint) //Grab the id of the user that send the request
-	//order := &models.Order{}
-	//
-	//err := json.NewDecoder(r.Body).Decode(order)
-	//if err != nil {
-	//	u.Respond(w, u.Message(false, "Error while decoding request body"))
-	//	return
-	//}
-	//
-	////order.UserId = user
-	//resp := order.Create()
-	//u.Respond(w, resp)
+	discountChangesRequest := GetDiscountChangesRequest{}
+
+	err := json.NewDecoder(r.Body).Decode(&discountChangesRequest)
+	if err != nil {
+		u.Respond(w, u.Message(false, "Error while decoding request body"))
+		return
+	}
+
+	client := models.GetClientByPhone(discountChangesRequest.Phone)
+	discountAccount := models.GetDiscountAccountByClientID(client.ID)
+	discountTransactions := models.GetDiscountChanges(discountAccount.ID)
+
+	resp := u.Message(true, "success")
+	resp["discountTransactions"] = discountTransactions
+
+	u.Respond(w, resp)
 }

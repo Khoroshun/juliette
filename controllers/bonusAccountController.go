@@ -31,7 +31,6 @@ var GetBonusAccount = func(w http.ResponseWriter, r *http.Request) {
 	resp["bonusAccount"] = bonusAccount
 	resp["client"] = client
 	resp["bonusTransactions"] = bonusTransactions
-
 	u.Respond(w, resp)
 }
 
