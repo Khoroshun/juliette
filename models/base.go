@@ -32,6 +32,7 @@ func init() {
 
 	db = conn
 	db.Debug().AutoMigrate(
+							&Account{},
 							&BonusAccount{},
 							&BonusTransaction{},
 							&Order{}, &Client{},

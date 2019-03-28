@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="PostgreSQL - juliette_api@localhost" uuid="19e95b0f-3b6f-4428-9731-1140eed9a8f5">
+    <data-source source="LOCAL" name="dcbpq4tkr0pn6o@ec2-54-225-129-101.compute-1.amazonaws.com" uuid="61976632-ac74-4db1-b51f-db5541ca2a9d">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-54-225-129-101.compute-1.amazonaws.com:5432/dcbpq4tkr0pn6o</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="PostgreSQL - juliette_api@localhost [2]" uuid="dd6a30c3-d9ab-45ed-9b83-1d5987633d05">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
