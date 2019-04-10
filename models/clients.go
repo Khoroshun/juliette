@@ -30,13 +30,26 @@ func (Client *Client) Validate() (map[string] interface{}, bool) {
 	return u.Message(true, "success"), true
 }
 
-func (Client *Client) Create() (map[string] interface{}) {
+func (Client *Client) Create() map[string] interface{} {
 
 	if resp, ok := Client.Validate(); !ok {
 		return resp
 	}
 
 	GetDB().Create(Client)
+
+	resp := u.Message(true, "success")
+	resp["Client"] = Client
+	return resp
+}
+
+func (Client *Client) Update() (map[string] interface{}) {
+
+	if resp, ok := Client.Validate(); !ok {
+		return resp
+	}
+
+	GetDB().Model(&Client).Where("id = ?",Client.ID).Updates(Client)
 
 	resp := u.Message(true, "success")
 	resp["Client"] = Client

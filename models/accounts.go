@@ -2,11 +2,10 @@ package models
 
 import (
 	"github.com/dgrijalva/jwt-go"
-	u "github.com/khoroshun/juliette/utils"
-	"strings"
 	"github.com/jinzhu/gorm"
-	"os"
+	u "github.com/khoroshun/juliette/utils"
 	"golang.org/x/crypto/bcrypt"
+	"os"
 )
 
 /*
@@ -20,7 +19,7 @@ type Token struct {
 //a struct to rep user account
 type Account struct {
 	gorm.Model
-	Email string `json:"email"`
+	Login string `json:"login"`
 	Password string `json:"password"`
 	Token string `json:"token";sql:"-"`
 }
@@ -28,24 +27,24 @@ type Account struct {
 //Validate incoming user details...
 func (account *Account) Validate() (map[string] interface{}, bool) {
 
-	if !strings.Contains(account.Email, "@") {
-		return u.Message(false, "Email address is required"), false
+	if len(account.Password) < 0 {
+		return u.Message(false, "Login required"), false
 	}
 
 	if len(account.Password) < 6 {
 		return u.Message(false, "Password is required"), false
 	}
 
-	//Email must be unique
+	//Login must be unique
 	temp := &Account{}
 
-	//check for errors and duplicate emails
-	err := GetDB().Table("accounts").Where("email = ?", account.Email).First(temp).Error
+	//check for errors and duplicate logins
+	err := GetDB().Table("accounts").Where("login = ?", account.Login).First(temp).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return u.Message(false, "Connection error. Please retry"), false
 	}
-	if temp.Email != "" {
-		return u.Message(false, "Email address already in use by another user."), false
+	if temp.Login != "" {
+		return u.Message(false, "Login address already in use by another user."), false
 	}
 
 	return u.Message(false, "Requirement passed"), true
@@ -79,13 +78,13 @@ func (account *Account) Create() (map[string] interface{}) {
 	return response
 }
 
-func Login(email, password string) (map[string]interface{}) {
+func Login(login, password string) (map[string]interface{}) {
 
 	account := &Account{}
-	err := GetDB().Table("accounts").Where("email = ?", email).First(account).Error
+	err := GetDB().Table("accounts").Where("login = ?", login).First(account).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return u.Message(false, "Email address not found")
+			return u.Message(false, "Login address not found")
 		}
 		return u.Message(false, "Connection error. Please retry")
 	}
@@ -112,7 +111,7 @@ func GetUser(u uint) *Account {
 
 	acc := &Account{}
 	GetDB().Table("accounts").Where("id = ?", u).First(acc)
-	if acc.Email == "" { //User not found!
+	if acc.Login == "" { //User not found!
 		return nil
 	}
 

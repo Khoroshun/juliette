@@ -15,11 +15,28 @@ type CreateBonusTransactionRequest struct {
 	Reason string `json:"reason"`
 }
 
-type GetBonusTransactionsRequest struct {
-	Phone string `json:"phone"`
+
+
+var CreateBonusTransaction = func(Order *models.Order) *models.BonusTransaction {
+
+	bonusTransaction := &models.BonusTransaction{}
+
+	bonusAccount := models.GetBonusAccountByClientID(Order.Client)
+
+	bonusTransaction.Account 	= bonusAccount.ID
+	bonusTransaction.Summ 		= Order.Bonus
+	bonusTransaction.Reason 	= strings.Join([]string{"За заказ #", Order.OrderNum }, "")
+	bonusTransaction.Date 		= time.Now().String()
+	bonusTransaction.Source 	= uint(0) // TODO: прокинуть источник
+	bonusTransaction.Num		= strings.Join([]string{"За заказ #", Order.OrderNum }, "")
+
+	bonusTransaction.Create()
+
+	return bonusTransaction
 }
 
-var CreateBonusTransaction = func(w http.ResponseWriter, r *http.Request) {
+
+var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request) {
 
 	//user := r.Context().Value("user") . (uint) //Grab the id of the user that send the request
 
@@ -34,7 +51,7 @@ var CreateBonusTransaction = func(w http.ResponseWriter, r *http.Request) {
 
 	client := models.GetClientByPhone(createBonusTransactionRequest.Phone)
 	if client == nil {
-		u.Respond(w, u.Message(false, "Error client not found"))
+		u.Respond(w, u.Message(false, "Error client not found 1"))
 		return
 	}
 	bonusAccount := models.GetBonusAccountByClientID(client.ID)
@@ -48,21 +65,29 @@ var CreateBonusTransaction = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
-func CreateBonusAccountTransaction (accountID uint,res request) {
+var GetBonusTransactionsHandler = func(w http.ResponseWriter, r *http.Request) {
 
-	bonusTransaction := &models.BonusTransaction{}
+	bonusTransactionsRequest := CreateBonusTransactionRequest{}
 
-	bonusTransaction.Account = accountID
-	bonusTransaction.Summ = res.Bonus
-	bonusTransaction.Reason =  strings.Join([]string{"Order #", res.OrderNum}, "")
-	bonusTransaction.Date =  time.Now().String()
-	//bonusTransaction.Source = source
-	bonusTransaction.Create()
+	err := json.NewDecoder(r.Body).Decode(&bonusTransactionsRequest)
+	if err != nil {
+		u.Respond(w, u.Message(false, "Error while decoding request body"))
+		return
+	}
+
+	client := models.GetClientByPhone(bonusTransactionsRequest.Phone)
+	bonusAccount := models.GetBonusAccountByClientID(client.ID)
+	bonusTransactions := models.GetBonusTransactions(bonusAccount.ID)
+
+	resp := u.Message(true, "success")
+	resp["bonusTransactions"] = bonusTransactions
+
+	u.Respond(w, resp)
 }
 
-var GetBonusTransactions = func(w http.ResponseWriter, r *http.Request) {
+var UpdateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request) {
 
-	bonusTransactionsRequest := GetBonusTransactionsRequest{}
+	bonusTransactionsRequest := CreateBonusTransactionRequest{}
 
 	err := json.NewDecoder(r.Body).Decode(&bonusTransactionsRequest)
 	if err != nil {

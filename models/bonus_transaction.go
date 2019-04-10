@@ -12,14 +12,15 @@ type BonusTransaction struct {
 	Summ uint `json:"summ"`
 	Reason string `json:"reason"`
 	Date string `json:"date"`
-	Source string `json:"source"`
+	Source uint `json:"source"`
+	Num string `json:"num"`
 }
 
 /*
  This struct function validate the required parameters sent through the http request body
 returns message and true if the requirement is met
 */
-func (BonusTransaction *BonusTransaction) Validate() (map[string] interface{}, bool) {
+func (bonusTransaction *BonusTransaction) Validate() (map[string] interface{}, bool) {
 
 	//if BonusTransaction.Client  <= 0  {
 	//	return u.Message(false, "BonusTransaction name should be on the payload"), false
@@ -37,19 +38,25 @@ func (BonusTransaction *BonusTransaction) Validate() (map[string] interface{}, b
 	return u.Message(true, "success"), true
 }
 
-func (bonusTransaction *BonusTransaction) Create() (map[string] interface{}) {
+func (bonusTransaction *BonusTransaction) Create() map[string] interface{} {
 
 	if resp, ok := bonusTransaction.Validate(); !ok {
 		return resp
 	}
 
-	GetDB().Create(bonusTransaction)
-
-	bonusAccount := GetBonusAccount(bonusTransaction.Account)
-	GetDB().Model(bonusAccount).Update("Summ",bonusAccount.Summ + bonusTransaction.Summ)
-
 	resp := u.Message(true, "success")
-	resp["bonusTransaction"] = bonusTransaction
+
+	if GetDB().Where("num = ?", bonusTransaction.Num) == nil {
+
+		GetDB().Create(bonusTransaction)
+		bonusAccount := GetBonusAccount(bonusTransaction.Account)
+		GetDB().Model(bonusAccount).Update("Summ",bonusAccount.Summ + bonusTransaction.Summ)
+		resp["bonusTransaction"] = bonusTransaction
+
+	}else{
+		resp = u.Message(false, "failure")
+	}
+
 	return resp
 }
 
