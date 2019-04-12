@@ -1,9 +1,8 @@
 package models
 
 import (
-	u "github.com/khoroshun/juliette/utils"
 	"github.com/jinzhu/gorm"
-	"fmt"
+	u "github.com/khoroshun/juliette/utils"
 )
 
 type Order struct {
@@ -38,7 +37,7 @@ func (Order *Order) Validate() (map[string] interface{}, bool) {
 	return u.Message(true, "success"), true
 }
 
-func (Order *Order) Create() (map[string] interface{}) {
+func (Order *Order) Create() map[string] interface{} {
 
 	if resp, ok := Order.Validate(); !ok {
 		return resp
@@ -58,7 +57,7 @@ func (Order *Order) Create() (map[string] interface{}) {
 	return resp
 }
 
-func (Order *Order) Update() (map[string] interface{}) {
+func (Order *Order) Update() map[string] interface{} {
 
 	if resp, ok := Order.Validate(); !ok {
 		return resp
@@ -71,19 +70,18 @@ func (Order *Order) Update() (map[string] interface{}) {
 	return resp
 }
 
+func GetOrder(request map[string] interface{}) [] Order {
 
-
-func GetOrder(id uint) (*Order) {
-
-	Order := &Order{}
-	err := GetDB().Table("Orders").Where("id = ?", id).First(Order).Error
+	var Orders []Order
+	err := GetDB().Table("orders").Where(request).Find(&Orders).Error
 	if err != nil {
 		return nil
 	}
-	return Order
+
+	return Orders
 }
 
-func GetOrderByNum(num string) (*Order) {
+func GetOrderByNum(num string) *Order {
 
 	Order := &Order{}
 	err := GetDB().Table("orders").Where("order_num = ?", num).First(Order).Error
@@ -91,16 +89,4 @@ func GetOrderByNum(num string) (*Order) {
 		return nil
 	}
 	return Order
-}
-
-func GetOrders(user uint) ([]*Order) {
-
-	Orders := make([]*Order, 0)
-	err := GetDB().Table("Orders").Where("user_id = ?", user).Find(&Orders).Error
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	return Orders
 }

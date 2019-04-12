@@ -60,11 +60,10 @@ func (bonusTransaction *BonusTransaction) Create() map[string] interface{} {
 	return resp
 }
 
+func GetBonusTransaction(request map[string] interface{}) [] BonusTransaction {
 
-func GetBonusTransaction(id uint) (*BonusTransaction) {
-
-	bonusTransaction := &BonusTransaction{}
-	err := GetDB().Table("bonusTransactions").Where("id = ?", id).First(bonusTransaction).Error
+	var bonusTransaction []BonusTransaction
+	err := GetDB().Table("bonus_transactions").Where(request).Find(&bonusTransaction).Error
 	if err != nil {
 		return nil
 	}

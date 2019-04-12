@@ -16,7 +16,6 @@ type CreateBonusTransactionRequest struct {
 }
 
 
-
 var CreateBonusTransaction = func(Order *models.Order) *models.BonusTransaction {
 
 	bonusTransaction := &models.BonusTransaction{}
@@ -35,10 +34,8 @@ var CreateBonusTransaction = func(Order *models.Order) *models.BonusTransaction 
 	return bonusTransaction
 }
 
-
 var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request) {
 
-	//user := r.Context().Value("user") . (uint) //Grab the id of the user that send the request
 
 	bonusTransaction := &models.BonusTransaction{}
 
@@ -65,22 +62,31 @@ var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 	u.Respond(w, resp)
 }
 
+
+var GetBonusTransactions = func(Request map[string] interface{}) [] models.BonusTransaction {
+
+	return models.GetBonusTransaction(Request)
+
+}
+
 var GetBonusTransactionsHandler = func(w http.ResponseWriter, r *http.Request) {
 
-	bonusTransactionsRequest := CreateBonusTransactionRequest{}
+	var request map[string]interface{}
 
-	err := json.NewDecoder(r.Body).Decode(&bonusTransactionsRequest)
+	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
 	}
 
-	client := models.GetClientByPhone(bonusTransactionsRequest.Phone)
-	bonusAccount := models.GetBonusAccountByClientID(client.ID)
-	bonusTransactions := models.GetBonusTransactions(bonusAccount.ID)
+	if request["phone"] != nil{
+		client := models.GetClientByPhone(request["phone"].(string))
+		delete(request,"phone")
+		request["client"] = client.ID
+	}
 
 	resp := u.Message(true, "success")
-	resp["bonusTransactions"] = bonusTransactions
+	resp["BonusTransactions"] = GetOrder(request)
 
 	u.Respond(w, resp)
 }

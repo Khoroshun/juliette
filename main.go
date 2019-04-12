@@ -27,9 +27,9 @@ func main() {
 	router.HandleFunc("/api/order/{order_num}/update", controllers.UpdateOrderHandler).Methods("POST")
 
 	// Bonus Transaction
-	router.HandleFunc("/api/order/get", controllers.GetBonusTransactionsHandler).Methods("GET")
-	router.HandleFunc("/api/order/new", controllers.CreateBonusTransactionHandler).Methods("POST")
-	router.HandleFunc("/api/order/update", controllers.UpdateBonusTransactionHandler).Methods("POST")
+	router.HandleFunc("/api/bonustransaction/get", controllers.GetBonusTransactionsHandler).Methods("GET")
+	router.HandleFunc("/api/bonustransaction/new", controllers.CreateBonusTransactionHandler).Methods("POST")
+	//router.HandleFunc("/api/order/update", controllers.UpdateBonusTransactionHandler).Methods("POST")
 
 /*
 	router.HandleFunc("/api/order/new", controllers.CreateOrder).Methods("POST")

@@ -2,21 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/khoroshun/juliette/models"
 	u "github.com/khoroshun/juliette/utils"
 	"net/http"
 )
-
-type request struct {
-	OrderNum string `json:"order_num"`
-	Phone string `json:"phone"`
-	Bonus uint `json:"bonus"`
-}
-
-type GetGetOrder struct {
-	Phone string `json:"phone"`
-}
 
 var CreateOrder = func(Order models.Order) map[string] interface{} {
 
@@ -35,12 +24,11 @@ var CreateOrder = func(Order models.Order) map[string] interface{} {
 	return resp
 }
 
-
 var CreateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 
 	source := r.Context().Value("user") . (uint) //Grab the id of the user that send the request
 	order := &models.Order{}
-	request := &request{}
+	var request  map[string]interface{}
 
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
@@ -48,8 +36,7 @@ var CreateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Print(request.OrderNum)
-	getOrder := models.GetOrderByNum(request.OrderNum)
+	getOrder := models.GetOrderByNum(request["order_num"].(string))
 	if getOrder != nil {
 		resp := u.Message(false, "order already exists")
 		resp["Order"] = getOrder
@@ -57,18 +44,18 @@ var CreateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := models.GetClientByPhone(request.Phone)
+	client := models.GetClientByPhone(request["phone"].(string))
 	if client == nil {
 		newClient := &models.Client{}
-		newClient.Phone = request.Phone
+		newClient.Phone = request["phone"].(string)
 		newClient.Name = "No name"
 		CreateClient(*newClient) // создаем покупателя и его бонусный счет
 	}
-	client = models.GetClientByPhone(request.Phone)
+	client = models.GetClientByPhone(request["phone"].(string))
 
 	order.Client = client.ID
-	order.OrderNum = request.OrderNum
-	order.Bonus = request.Bonus
+	order.OrderNum = request["order_num"].(string)
+	order.Bonus = request["bonus"].(uint)
 	order.Source = source
 
 	resp := CreateOrder(*order) // созздаем заказ и транзакцию по заказу
@@ -78,7 +65,7 @@ var CreateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 var UpdateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 
 	source  := r.Context().Value("user") . (uint)
-	request := request{}
+	var request  map[string]interface{}
 	order   := &models.Order{}
 
 	err := json.NewDecoder(r.Body).Decode(&request)
@@ -86,11 +73,11 @@ var UpdateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
 	}
-	client  := models.GetClientByPhone(request.Phone)
+	client  := models.GetClientByPhone(request["phone"].(string))
 
-	order.OrderNum = request.OrderNum
+	order.OrderNum = request["order_num"].(string)
 	order.Client = client.ID
-	order.Bonus = request.Bonus
+	order.Bonus = request["bonus"].(uint)
 	order.Source = source
 
 	resp := order.Update()
@@ -99,19 +86,29 @@ var UpdateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 
 var GetOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 
-	source := r.Context().Value("user") . (uint) //Grab the id of the user that send the request
-	source = source
+	var request map[string]interface{}
 
-	res 				:= request{}
-
-	err := json.NewDecoder(r.Body).Decode(&res)
+	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
 	}
 
+	if request["phone"] != nil{
+		client := models.GetClientByPhone(request["phone"].(string))
+		delete(request,"phone")
+		request["client"] = client.ID
+	}
 
 
-	//resp := GetOrder
-	//u.Respond(w, resp)
+	resp := u.Message(true, "success")
+	resp["Orders"] = GetOrder(request)
+
+	u.Respond(w, resp)
+}
+
+var GetOrder = func(Request map[string] interface{}) [] models.Order {
+
+	return models.GetOrder(Request)
+
 }
