@@ -43,10 +43,12 @@ func (bonusTransaction *BonusTransaction) Create() map[string] interface{} {
 	if resp, ok := bonusTransaction.Validate(); !ok {
 		return resp
 	}
-
 	resp := u.Message(true, "success")
+	count := 0
 
-	if GetDB().Where("num = ?", bonusTransaction.Num) == nil {
+	GetDB().Where("num = ?",  bonusTransaction.Num).Find(bonusTransaction).Count(&count)
+
+	if count == 0 {
 
 		GetDB().Create(bonusTransaction)
 		bonusAccount := GetBonusAccount(bonusTransaction.Account)
@@ -54,7 +56,8 @@ func (bonusTransaction *BonusTransaction) Create() map[string] interface{} {
 		resp["bonusTransaction"] = bonusTransaction
 
 	}else{
-		resp = u.Message(false, "failure")
+
+		resp = u.Message(false, "failure - transaction with this number already exists")
 	}
 
 	return resp

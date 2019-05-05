@@ -13,6 +13,7 @@ type CreateBonusTransactionRequest struct {
 	Phone string `json:"phone"`
 	Summ uint `json:"summ"`
 	Reason string `json:"reason"`
+	Num string `json:"num"`
 }
 
 
@@ -48,15 +49,21 @@ var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 
 	client := models.GetClientByPhone(createBonusTransactionRequest.Phone)
 	if client == nil {
-		u.Respond(w, u.Message(false, "Error client not found 1"))
-		return
+		newClient := &models.Client{}
+		newClient.Phone = createBonusTransactionRequest.Phone
+		newClient.Name = "No name"
+		CreateClient(*newClient)
+
 	}
+	client = models.GetClientByPhone(createBonusTransactionRequest.Phone)
+
 	bonusAccount := models.GetBonusAccountByClientID(client.ID)
 
 	bonusTransaction.Account 	= bonusAccount.ID
 	bonusTransaction.Summ 		= createBonusTransactionRequest.Summ
 	bonusTransaction.Reason 	= createBonusTransactionRequest.Reason
 	bonusTransaction.Date 		= time.Now().String()
+	bonusTransaction.Num		= createBonusTransactionRequest.Num
 
 	resp := bonusTransaction.Create()
 	u.Respond(w, resp)
