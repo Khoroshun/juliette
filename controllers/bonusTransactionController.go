@@ -70,9 +70,14 @@ var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 }
 
 
-var GetBonusTransactions = func(Request map[string] interface{}) [] models.BonusTransaction {
+var GetBonusTransactions = func(request map[string] interface{}) [] models.BonusTransaction {
 
-	return models.GetBonusTransaction(Request)
+	if request["phone"] != nil{
+		client := models.GetClientByPhone(request["phone"].(string))
+		delete(request,"phone")
+		request["client"] = client.ID
+	}
+	return models.GetBonusTransaction(request)
 
 }
 
