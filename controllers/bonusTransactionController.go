@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/khoroshun/juliette/models"
 	u "github.com/khoroshun/juliette/utils"
 	"net/http"
@@ -79,12 +80,14 @@ var GetBonusTransactions = func(request map[string] interface{}) [] models.Bonus
 
 var GetBonusTransactionsHandler = func(w http.ResponseWriter, r *http.Request) {
 
-	var request map[string]interface{}
+	request := make(map[string]interface{}, 10)
+	values := r.URL.Query()
 
-	err := json.NewDecoder(r.Body).Decode(&request)
-	if err != nil {
-		u.Respond(w, u.Message(false, "Error while decoding request body"))
-		return
+	for i, v := range values {
+		if i == "phone"{// для телефона удаляем пробелы из строки и добавляем в начале +
+			v[0] = fmt.Sprintf("%s%s", "+", strings.Replace(v[0]," ","",-1))
+		}
+		request[i] = v[0]
 	}
 
 	if request["phone"] != nil{
