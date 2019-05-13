@@ -13,5 +13,7 @@ func Message(status bool, message string) (map[string]interface{}) {
 
 func Respond(w http.ResponseWriter, data map[string] interface{})  {
 	w.Header().Add("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(w).Encode(data)
+	encoder := json.NewEncoder(w)
+	encoder.SetEscapeHTML(false)
+	encoder.Encode(data)
 }
