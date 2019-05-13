@@ -8,12 +8,13 @@ import (
 
 type BonusTransaction struct {
 	gorm.Model
-	Account uint `json:"account"`
-	Summ int `json:"summ"`
-	Reason string `json:"reason"`
-	Date string `json:"date"`
-	Source uint `json:"source"`
-	Num string `json:"num"`
+	Account uint   `json:"account"`
+	Summ    int    `json:"summ"`
+	Reason  string `json:"reason"`
+	Date    string `json:"date"`
+	Source  uint   `json:"source"`
+	Num     string `json:"num"`
+	ErpUid  string `json:"erpuid"`
 }
 
 /*
