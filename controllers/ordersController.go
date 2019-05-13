@@ -55,10 +55,10 @@ var CreateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 
 	order.Client = client.ID
 	order.OrderNum = request["order_num"].(string)
-	order.Bonus = request["bonus"].(uint)
+	order.Bonus = request["bonus"].(int)
 	order.Source = source
 
-	resp := CreateOrder(*order) // созздаем заказ и транзакцию по заказу
+	resp := CreateOrder(*order) // создаем заказ и транзакцию по заказу
 	u.Respond(w, resp)
 }
 
@@ -77,7 +77,7 @@ var UpdateOrderHandler = func(w http.ResponseWriter, r *http.Request) {
 
 	order.OrderNum = request["order_num"].(string)
 	order.Client = client.ID
-	order.Bonus = request["bonus"].(uint)
+	order.Bonus = request["bonus"].(int)
 	order.Source = source
 
 	resp := order.Update()

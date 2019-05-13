@@ -11,7 +11,7 @@ type Order struct {
 	Summ uint `json:"summ"`
 	Source uint `json:"source"`
 	Client uint `json:"client"`
-	Bonus uint `json:"bonus"`
+	Bonus int `json:"bonus"`
 
 }
 

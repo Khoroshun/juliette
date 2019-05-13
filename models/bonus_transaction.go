@@ -9,7 +9,7 @@ import (
 type BonusTransaction struct {
 	gorm.Model
 	Account uint `json:"account"`
-	Summ uint `json:"summ"`
+	Summ int `json:"summ"`
 	Reason string `json:"reason"`
 	Date string `json:"date"`
 	Source uint `json:"source"`
@@ -62,6 +62,20 @@ func (bonusTransaction *BonusTransaction) Create() map[string] interface{} {
 
 	return resp
 }
+
+func (bonusTransaction *BonusTransaction) Update() map[string] interface{} {
+
+	if resp, ok := bonusTransaction.Validate(); !ok {
+		return resp
+	}
+
+	GetDB().Model(&bonusTransaction).Where("num = ?",bonusTransaction.Num).Updates(bonusTransaction)
+
+	resp := u.Message(true, "success")
+	resp["bonusTransaction"] = bonusTransaction
+	return resp
+}
+
 
 func GetBonusTransaction(request map[string] interface{}) [] BonusTransaction {
 

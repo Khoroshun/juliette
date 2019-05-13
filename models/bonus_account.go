@@ -9,7 +9,7 @@ import (
 type BonusAccount struct {
 	gorm.Model
 	Client uint `json:"client"`
-	Summ uint `json:"summ"`
+	Summ int `json:"summ"`
 	Status string `json:"status"`
 }
 

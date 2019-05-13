@@ -11,7 +11,7 @@ import (
 
 type CreateBonusTransactionRequest struct {
 	Phone string `json:"phone"`
-	Summ uint `json:"summ"`
+	Summ int `json:"summ"`
 	Reason string `json:"reason"`
 	Num string `json:"num"`
 }
@@ -89,9 +89,11 @@ var GetBonusTransactionsHandler = func(w http.ResponseWriter, r *http.Request) {
 
 	if request["phone"] != nil{
 		client := models.GetClientByPhone(request["phone"].(string))
-		delete(request,"phone")
-		bonusAccount := models.GetBonusAccountByClientID(client.ID)
-		request["account"] = bonusAccount.ID
+		if client != nil{
+			delete(request,"phone")
+			bonusAccount := models.GetBonusAccountByClientID(client.ID)
+			request["account"] = bonusAccount.ID
+		}
 	}
 
 	resp := u.Message(true, "success")
@@ -104,18 +106,22 @@ var UpdateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 
 	bonusTransactionsRequest := CreateBonusTransactionRequest{}
 
+	bonusTransaction   := &models.BonusTransaction{}
+
 	err := json.NewDecoder(r.Body).Decode(&bonusTransactionsRequest)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
 	}
+	//client  := models.GetClientByPhone(request["phone"].(string))
 
-	client := models.GetClientByPhone(bonusTransactionsRequest.Phone)
-	bonusAccount := models.GetBonusAccountByClientID(client.ID)
-	bonusTransactions := models.GetBonusTransactions(bonusAccount.ID)
+	bonusTransaction.Summ = bonusTransactionsRequest.Summ
+	bonusTransaction.Reason = bonusTransactionsRequest.Reason
+	bonusTransaction.Num = bonusTransactionsRequest.Num
 
-	resp := u.Message(true, "success")
-	resp["bonusTransactions"] = bonusTransactions
-
+	resp := bonusTransaction.Update()
 	u.Respond(w, resp)
+
+
+
 }
