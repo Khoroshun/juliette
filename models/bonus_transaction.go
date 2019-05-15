@@ -70,7 +70,11 @@ func (bonusTransaction *BonusTransaction) Update() map[string] interface{} {
 		return resp
 	}
 
+	fmt.Print(bonusTransaction.Summ)
+
 	GetDB().Model(&bonusTransaction).Where("num = ?",bonusTransaction.Num).Updates(bonusTransaction)
+	// костыль, разобраться-переделать!
+	GetDB().Model(&bonusTransaction).Where("num = ?",bonusTransaction.Num).Update("summ",bonusTransaction.Summ)
 
 	resp := u.Message(true, "success")
 	resp["bonusTransaction"] = bonusTransaction

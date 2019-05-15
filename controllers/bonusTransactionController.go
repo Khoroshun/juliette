@@ -118,6 +118,9 @@ var UpdateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
 	}
+
+
+
 	//client  := models.GetClientByPhone(request["phone"].(string))
 
 	bonusTransaction.Summ = bonusTransactionsRequest.Summ
