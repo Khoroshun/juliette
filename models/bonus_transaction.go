@@ -8,12 +8,13 @@ import (
 
 type BonusTransaction struct {
 	gorm.Model
-	Account uint `json:"account"`
-	Summ int `json:"summ"`
-	Reason string `json:"reason"`
-	Date string `json:"date"`
-	Source uint `json:"source"`
-	Num string `json:"num"`
+	Account uint   `json:"account"`
+	Summ    int    `json:"summ"`
+	Reason  string `json:"reason"`
+	Date    string `json:"date"`
+	Source  uint   `json:"source"`
+	Num     string `json:"num"`
+	ErpUid  string `json:"erpuid"`
 }
 
 /*
@@ -69,7 +70,11 @@ func (bonusTransaction *BonusTransaction) Update() map[string] interface{} {
 		return resp
 	}
 
+	fmt.Print(bonusTransaction.Summ)
+
 	GetDB().Model(&bonusTransaction).Where("num = ?",bonusTransaction.Num).Updates(bonusTransaction)
+	// костыль, разобраться-переделать!
+	GetDB().Model(&bonusTransaction).Where("num = ?",bonusTransaction.Num).Update("summ",bonusTransaction.Summ)
 
 	resp := u.Message(true, "success")
 	resp["bonusTransaction"] = bonusTransaction

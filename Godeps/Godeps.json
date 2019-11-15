@@ -48,6 +48,16 @@
 			"Rev": "7aad666537ab32b76f0966145530335f1fed51fd"
 		},
 		{
+			"ImportPath": "github.com/wildsurfer/turbosms-go",
+			"Comment": "v0.0.2",
+			"Rev": "58f1759a99c403c639ea4182503408bbb3326104"
+		},
+		{
+			"ImportPath": "github.com/wildsurfer/turbosms-go/wsdl",
+			"Comment": "v0.0.2",
+			"Rev": "58f1759a99c403c639ea4182503408bbb3326104"
+		},
+		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
 			"Rev": "b7391e95e576cacdcdd422573063bc057239113d"
 		},

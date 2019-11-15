@@ -15,6 +15,7 @@ type CreateBonusTransactionRequest struct {
 	Summ int `json:"summ"`
 	Reason string `json:"reason"`
 	Num string `json:"num"`
+	ErpUid string `json:"erpuid"`
 }
 
 
@@ -65,6 +66,7 @@ var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 	bonusTransaction.Reason 	= createBonusTransactionRequest.Reason
 	bonusTransaction.Date 		= time.Now().String()
 	bonusTransaction.Num		= createBonusTransactionRequest.Num
+	bonusTransaction.ErpUid		= createBonusTransactionRequest.ErpUid
 
 	resp := bonusTransaction.Create()
 	u.Respond(w, resp)
@@ -116,11 +118,15 @@ var UpdateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
 	}
+
+
+
 	//client  := models.GetClientByPhone(request["phone"].(string))
 
 	bonusTransaction.Summ = bonusTransactionsRequest.Summ
 	bonusTransaction.Reason = bonusTransactionsRequest.Reason
 	bonusTransaction.Num = bonusTransactionsRequest.Num
+	bonusTransaction.ErpUid = bonusTransactionsRequest.ErpUid
 
 	resp := bonusTransaction.Update()
 	u.Respond(w, resp)
