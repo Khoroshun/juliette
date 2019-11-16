@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	sms "github.com/wildsurfer/turbosms-go"
 )
 
 type CreateBonusTransactionRequest struct {
@@ -67,6 +68,11 @@ var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 	bonusTransaction.Date 		= time.Now().String()
 	bonusTransaction.Num		= createBonusTransactionRequest.Num
 	bonusTransaction.ErpUid		= createBonusTransactionRequest.ErpUid
+
+	c := sms.NewClient("JulietteBrand", "0997740160jb")
+	sms_text  := fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - начисление бонусов - :",bonusTransaction.Summ , "  https://juliette-sun.com.ua/check_bonus.php")
+	c.SendSMS("Juliette", client.Phone, sms_text, "")
+
 
 	resp := bonusTransaction.Create()
 	u.Respond(w, resp)

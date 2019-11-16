@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	u "github.com/khoroshun/juliette/utils"
-	sms "github.com/wildsurfer/turbosms-go"
 )
 
 type BonusTransaction struct {
@@ -49,23 +48,24 @@ func (bonusTransaction *BonusTransaction) Create() map[string] interface{} {
 	count := 0
 
 	GetDB().Where("num = ?",  bonusTransaction.Num).Find(bonusTransaction).Count(&count)
-	client_id := 0
+	//client_id := 0
 	if count == 0 {
 
 		GetDB().Create(bonusTransaction)
 		bonusAccount := GetBonusAccount(bonusTransaction.Account)
 		GetDB().Model(bonusAccount).Update("Summ",bonusAccount.Summ + bonusTransaction.Summ)
 		resp["bonusTransaction"] = bonusTransaction
-		client_id = int(bonusAccount.Client)
+		//client_id = int(bonusAccount.Client)
 	}else{
 
 		resp = u.Message(false, "failure - transaction with this number already exists")
 	}
 
-	Client := &Client{}
-	GetDB().Model(Client).Where("id = ?",client_id)
-	c := sms.NewClient("JulietteBrand", "0997740160jb")
-	c.SendSMS("Juliette", "+380967154107", "Программа лояльности JULIETTE - начисление бонусов! https://juliette-sun.com.ua/check_bonus.php", "")
+	//Client := &Client{}
+	//GetDB().Model(Client).Where("id = ?",client_id)
+	//
+	//c := sms.NewClient("JulietteBrand", "0997740160jb")
+	//c.SendSMS("Juliette", Client.Phone, "Программа лояльности JULIETTE - начисление бонусов! https://juliette-sun.com.ua/check_bonus.php", "")
 
 	return resp
 }
