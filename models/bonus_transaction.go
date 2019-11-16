@@ -64,9 +64,8 @@ func (bonusTransaction *BonusTransaction) Create() map[string] interface{} {
 
 	Client := &Client{}
 	GetDB().Model(Client).Where("id = ?",client_id)
-
 	c := sms.NewClient("JulietteBrand", "0997740160jb")
-	c.SendSMS("Juliette", Client.Phone, "Программа лояльности JULIETTE - начисление бонусов! https://juliette-sun.com.ua/check_bonus.php", "")
+	c.SendSMS("Juliette", "+380967154107", "Программа лояльности JULIETTE - начисление бонусов! https://juliette-sun.com.ua/check_bonus.php", "")
 
 	return resp
 }
