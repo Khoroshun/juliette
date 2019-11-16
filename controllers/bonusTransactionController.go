@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
-	sms "github.com/wildsurfer/turbosms-go"
+	//sms "github.com/wildsurfer/turbosms-go"
 )
 
 type CreateBonusTransactionRequest struct {
@@ -69,14 +69,14 @@ var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 	bonusTransaction.Num		= createBonusTransactionRequest.Num
 	bonusTransaction.ErpUid		= createBonusTransactionRequest.ErpUid
 
-	c := sms.NewClient("JulietteBrand", "0997740160jb")
-	sms_text := ""
-	if bonusTransaction.Summ > 0 {
-		sms_text = fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - начислено бонусов ", bonusTransaction.Summ, "грн.  https://juliette-sun.com.ua/check_bonus.php")
-	}else{
-		sms_text = fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - списано бонусов ", bonusTransaction.Summ, "грн.  https://juliette-sun.com.ua/check_bonus.php")
-	}
-	c.SendSMS("Juliette", client.Phone, sms_text, "")
+	//c := sms.NewClient("JulietteBrand", "0997740160jb")
+	//sms_text := ""
+	//if bonusTransaction.Summ > 0 {
+	//	sms_text = fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - начислено бонусов ", bonusTransaction.Summ, "грн.  https://juliette-sun.com.ua/check_bonus.php")
+	//}else{
+	//	sms_text = fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - списано бонусов ", bonusTransaction.Summ, "грн.  https://juliette-sun.com.ua/check_bonus.php")
+	//}
+	//c.SendSMS("Juliette", client.Phone, sms_text, "")
 
 
 	resp := bonusTransaction.Create()
