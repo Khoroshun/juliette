@@ -14,7 +14,7 @@ import (
 func main() {
 
 	c := cron.New()
-	c.AddFunc("5 * * * *", func() {
+	c.AddFunc("*/5 * * * *", func() {
 		sender := sms.NewClient("JulietteBrand", "0997740160jb")
 		sender.SendSMS("Juliette", "+380967154107", "test", "")
 
