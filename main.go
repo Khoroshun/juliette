@@ -6,7 +6,7 @@ import (
 	"github.com/khoroshun/juliette/app"
 	"github.com/khoroshun/juliette/controllers"
 	cron "github.com/robfig/cron"
-	sms "github.com/wildsurfer/turbosms-go"
+	//sms "github.com/wildsurfer/turbosms-go"
 	"net/http"
 	"os"
 )
