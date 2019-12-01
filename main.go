@@ -19,7 +19,7 @@ func main() {
 		sender.SendSMS("Juliette", "+380967154107", "test", "")
 
 	})
-
+	c.Start()
 	router := mux.NewRouter()
 
 	router.HandleFunc("/api/user/new", controllers.CreateAccount).Methods("POST")
