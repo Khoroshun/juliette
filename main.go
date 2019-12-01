@@ -13,13 +13,25 @@ import (
 
 func main() {
 
+
 	c := cron.New()
-	c.AddFunc("*/5 * * * *", func() {
-		sender := sms.NewClient("JulietteBrand", "0997740160jb")
-		sender.SendSMS("Juliette", "+380967154107", "test", "")
+	c.AddFunc("* */1 * * *", func() {
+
+
+
+
+
+		//sender := sms.NewClient("JulietteBrand", "0997740160jb")
+		//sender.SendSMS("Juliette", "+380967154107", "test", "")
 
 	})
 	c.Start()
+
+
+
+
+
+
 	router := mux.NewRouter()
 
 	router.HandleFunc("/api/user/new", controllers.CreateAccount).Methods("POST")
