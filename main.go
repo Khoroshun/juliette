@@ -5,11 +5,20 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/khoroshun/juliette/app"
 	"github.com/khoroshun/juliette/controllers"
+	cron "github.com/robfig/cron"
+	sms "github.com/wildsurfer/turbosms-go"
 	"net/http"
 	"os"
 )
 
 func main() {
+
+	c := cron.New()
+	c.AddFunc("5 * * * *", func() {
+		sender := sms.NewClient("JulietteBrand", "0997740160jb")
+		sender.SendSMS("Juliette", "+380967154107", "test", "")
+
+	})
 
 	router := mux.NewRouter()
 
