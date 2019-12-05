@@ -9,6 +9,7 @@ import (
 type BonusTransaction struct {
 	gorm.Model
 	Account uint   `json:"account"`
+	Active  bool   `json:"active"`
 	Summ    int    `json:"summ"`
 	Reason  string `json:"reason"`
 	Date    string `json:"date"`
@@ -52,8 +53,6 @@ func (bonusTransaction *BonusTransaction) Create() map[string] interface{} {
 	if count == 0 {
 
 		GetDB().Create(bonusTransaction)
-		bonusAccount := GetBonusAccount(bonusTransaction.Account)
-		GetDB().Model(bonusAccount).Update("Summ",bonusAccount.Summ + bonusTransaction.Summ)
 		resp["bonusTransaction"] = bonusTransaction
 		//client_id = int(bonusAccount.Client)
 	}else{
@@ -75,8 +74,6 @@ func (bonusTransaction *BonusTransaction) Update() map[string] interface{} {
 	if resp, ok := bonusTransaction.Validate(); !ok {
 		return resp
 	}
-
-	fmt.Print(bonusTransaction.Summ)
 
 	GetDB().Model(&bonusTransaction).Where("num = ?",bonusTransaction.Num).Updates(bonusTransaction)
 	// костыль, разобраться-переделать!

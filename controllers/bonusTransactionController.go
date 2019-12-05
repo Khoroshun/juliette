@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/khoroshun/juliette/models"
 	u "github.com/khoroshun/juliette/utils"
+	sms "github.com/wildsurfer/turbosms-go"
 	"net/http"
 	"strings"
 	"time"
@@ -26,6 +27,7 @@ var CreateBonusTransaction = func(Order *models.Order) *models.BonusTransaction 
 
 	bonusAccount := models.GetBonusAccountByClientID(Order.Client)
 
+	bonusTransaction.Active 	= false
 	bonusTransaction.Account 	= bonusAccount.ID
 	bonusTransaction.Summ 		= Order.Bonus
 	bonusTransaction.Reason 	= strings.Join([]string{"За заказ #", Order.OrderNum }, "")
@@ -69,14 +71,14 @@ var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 	bonusTransaction.Num		= createBonusTransactionRequest.Num
 	bonusTransaction.ErpUid		= createBonusTransactionRequest.ErpUid
 
-	//c := sms.NewClient("JulietteBrand", "0997740160jb")
-	//sms_text := ""
-	//if bonusTransaction.Summ > 0 {
-	//	sms_text = fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - начислено бонусов ", bonusTransaction.Summ, "грн.  https://juliette-sun.com.ua/check_bonus.php")
-	//}else{
-	//	sms_text = fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - списано бонусов ", bonusTransaction.Summ, "грн.  https://juliette-sun.com.ua/check_bonus.php")
-	//}
-	//c.SendSMS("Juliette", client.Phone, sms_text, "")
+	c := sms.NewClient("JulietteBrand", "0997740160jb")
+	sms_text := ""
+	if bonusTransaction.Summ > 0 {
+		sms_text = fmt.Sprintf("%s%d%s", "Благодарим за покупку! Вам начислено ", bonusTransaction.Summ, "бонусов. 1 бонус = 1 грн. Активация через 10 дней. Подробнее по ссылке https://juliette-sun.com.ua/check_bonus.php")
+	}else{
+		sms_text = fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - списано бонусов ", bonusTransaction.Summ, "грн. Подробнее https://juliette-sun.com.ua/check_bonus.php")
+	}
+	c.SendSMS("Juliette", client.Phone, sms_text, "")
 
 
 	resp := bonusTransaction.Create()
@@ -130,9 +132,6 @@ var UpdateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-
-
-	//client  := models.GetClientByPhone(request["phone"].(string))
 
 	bonusTransaction.Summ = bonusTransactionsRequest.Summ
 	bonusTransaction.Reason = bonusTransactionsRequest.Reason
