@@ -63,7 +63,7 @@ func sendPushSmsAccount(days int64, message string)  {
 		fmt.Println(getPhoneByBonusAccountID(bonusAccounts[i].ID))
 		fmt.Println(message)
 
-		sender.SendSMS("Juliette", getPhoneByBonusAccountID(int(bonusAccounts[i].ID)), message, "")
+		sender.SendSMS("Juliette", getPhoneByBonusAccountID(bonusAccounts[i].ID), message, "")
 	}
 
 
@@ -108,7 +108,7 @@ func bonusActivate(){
 
 			fmt.Println(getPhoneByBonusAccountID(bonusTransactions[i].Account))
 			fmt.Println(message)
-			sender.SendSMS("Juliette", getPhoneByBonusAccountID(int(bonusTransactions[i].Account)), message, "")
+			sender.SendSMS("Juliette", getPhoneByBonusAccountID(bonusTransactions[i].Account), message, "")
 		}
 
 	}
