@@ -74,7 +74,7 @@ var CreateBonusTransactionHandler = func(w http.ResponseWriter, r *http.Request)
 	c := sms.NewClient("JulietteBrand", "0997740160jb")
 	sms_text := ""
 	if bonusTransaction.Summ > 0 {
-		sms_text = fmt.Sprintf("%s%d%s", "Благодарим за покупку! Вам начислено ", bonusTransaction.Summ, "бонусов. 1 бонус = 1 грн. Активация через 10 дней. Подробнее по ссылке https://juliette-sun.com.ua/check_bonus.php")
+		sms_text = fmt.Sprintf("%s%d%s", "Благодарим за покупку! Вам начислено ", bonusTransaction.Summ, " бонусов. 1 бонус = 1 грн. Активация через 10 дней. Подробнее по ссылке https://juliette-sun.com.ua/check_bonus.php")
 	}else{
 		sms_text = fmt.Sprintf("%s%d%s", "Программа лояльности JULIETTE - списано бонусов ", bonusTransaction.Summ, "грн. Подробнее https://juliette-sun.com.ua/check_bonus.php")
 	}
