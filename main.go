@@ -7,6 +7,7 @@ import (
 	"github.com/khoroshun/juliette/controllers"
 	"github.com/khoroshun/juliette/models"
 	"github.com/robfig/cron"
+	sms "github.com/wildsurfer/turbosms-go"
 	"net/http"
 	"os"
 	"strconv"
@@ -55,14 +56,14 @@ func sendPushSmsAccount(days int64, message string)  {
 
 	message = strings.Replace(message, "#FINISH#", u_finish, -1)
 
-//	sender := sms.NewClient("JulietteBrand", "0997740160jb")
+	sender := sms.NewClient("JulietteBrand", "0997740160jb")
 	for i := 0; i < len(bonusAccounts); i++ {
 
 		message = strings.Replace(message, "#SUMM#", strconv.Itoa(bonusAccounts[i].Summ), -1)
 		fmt.Println(getPhoneByBonusAccountID(bonusAccounts[i].ID))
 		fmt.Println(message)
 
-		//sender.SendSMS("Juliette", getPhoneByBonusAccountID(int(bonusAccounts[i].ID)), message, "")
+		sender.SendSMS("Juliette", getPhoneByBonusAccountID(int(bonusAccounts[i].ID)), message, "")
 	}
 
 
@@ -88,7 +89,7 @@ func bonusActivate(){
 		fmt.Println(err)
 	}
 
-	//sender := sms.NewClient("JulietteBrand", "0997740160jb")
+	sender := sms.NewClient("JulietteBrand", "0997740160jb")
 	for i := 0; i < len(bonusTransactions); i++ {
 
 		if !bonusTransactions[i].Active {
@@ -107,7 +108,7 @@ func bonusActivate(){
 
 			fmt.Println(getPhoneByBonusAccountID(bonusTransactions[i].Account))
 			fmt.Println(message)
-			//sender.SendSMS("Juliette", getPhoneByBonusAccountID(int(bonusTransactions[i].Account)), message, "")
+			sender.SendSMS("Juliette", getPhoneByBonusAccountID(int(bonusTransactions[i].Account)), message, "")
 		}
 
 	}
